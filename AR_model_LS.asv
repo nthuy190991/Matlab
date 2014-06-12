@@ -1,0 +1,75 @@
+% Ve mat do pho cong suat, dung mo hinh AR, phuong phap binh phuong toi
+% thieu
+
+clear
+close all
+clc
+load myfile.mat xx
+
+N=1001;
+T=0.001;
+
+tt=xx(1,:);
+yy=xx(2,:);
+
+for p=1:100
+    
+    for k=1:(N-p)
+        xn(k)=yy(k+p);
+    end
+
+    xn=xn';
+
+    for m=1:(N-p)
+        for n=1:p
+            R(m,n) = -yy(m+p-n);
+        end
+    end
+
+    theta = inv((R'*R))*R'*xn;
+
+    Jmin=(xn-R*theta)'*(xn-R*theta);
+
+    b0 = sqrt(Jmin/(N-p));
+
+    AIC(p) = 2*p/N + log(b0.^2);
+    xn=xn';
+end
+
+pp=1:100;
+plot(pp,AIC);
+
+min=AIC(1);
+for p=1:100
+    if (AIC(p)<min)
+        min=AIC(p);
+        p0=p;
+    end
+end
+
+fprintf(' Gia tri p de AIC nho nhat la: %d',p0);
+
+p=p0;
+for k=1:(N-p)
+     xn(k)=yy(k+p);
+end
+
+xn=xn';
+
+for m=1:(N-p)
+    for n=1:p
+        R(m,n) = -yy(m+p-n);
+    end
+end
+
+theta = inv((R'*R))*R'*xn;
+
+Jmin=(xn-R*theta)'*(xn-R*theta);
+
+b0 = sqrt(Jmin/(N-p));
+
+for f=1:5
+for k=1:(p+1)
+    s=s+theta(k)*exp(-i*2*pi*f*(k-1))
+
+    

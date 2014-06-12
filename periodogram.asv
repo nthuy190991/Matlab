@@ -1,0 +1,25 @@
+clear
+clc
+load myfile.mat xx
+
+N=10001;
+T=0.001;
+
+tt=xx(1,:);
+yy=xx(2,:);
+
+for f=1:500
+    s(f)=0;
+    for k=1:N
+        s(f)=s(f)+yy(k)*exp(-1i*2*pi*f*(k-1)*0.001);
+    end
+    p(f)=*(abs(s(f)).^2);
+    p_3db(f)=20*log10(p(f));
+end
+
+figure
+ff=1:500;
+plot(ff,p);
+
+figure
+plot(ff,p_3db);
